@@ -1,18 +1,44 @@
 import React from "react";
+import {Card} from "semantic-ui-react"
 import "../stylesheets/Area.css";
+import Host from "./Host";
 
-function Area() {
+function Area({name, hosts, areHostsSelected, handleHostClick, limit}) {
+  let cleanName = name.split("_").filter((part) => {
+    if(part==="_") return false;
+    return true;
+  }).map((part) => {
+    return part[0].toUpperCase() + part.slice(1, part.length);
+  }).join(" ");
+
+  const activeHosts = hosts.filter((host) => {
+    if(host.active) return true;
+    return false;
+  })
+
+  
+
   return (
     <div
       className="area"
-      id={
-        /* Pass in the area name here to make sure this is styled correctly */ "id"
-      }
+      id={name}
     >
       <h3 className="labels">
-        {/* Don't just pass in the name from the data...clean that thing up */}
+        {cleanName}
       </h3>
-      {/* See Checkpoint 1 item 2 in the Readme for a clue as to what goes here */}
+      <Card.Group itemsPerRow={limit/2}>
+      {activeHosts.map((host) => {
+        return (
+          <Host 
+            imageUrl={host.imageUrl}
+            onClickHost={handleHostClick}
+            areHostsSelected={areHostsSelected}
+            id={host.id}
+            key={host.id}
+          />
+        )
+      })}
+      </Card.Group>
     </div>
   );
 }
